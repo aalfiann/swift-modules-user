@@ -17,7 +17,7 @@ class UserHelper {
      * @return string
      */
     public function getDataSource(){
-        return 'storage/user';
+        return 'storage'.DIRECTORY_SEPARATOR.'user';
     }
 
     /**
@@ -26,7 +26,16 @@ class UserHelper {
      * @return string
      */
     public function getDataSourceForgot(){
-        return 'storage/user_forgot';
+        return 'storage'.DIRECTORY_SEPARATOR.'user_forgot';
+    }
+
+    /**
+     * The auth route list for user
+     * 
+     * @return string
+     */
+    public function getAuthRoutePath(){
+        return 'config'.DIRECTORY_SEPARATOR.'route.json';
     }
     
     /** 

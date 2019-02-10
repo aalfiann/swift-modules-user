@@ -83,7 +83,7 @@ class User extends UserHelper {
                 $item->hash = $this->hashPassword($username,$password);
                 $item->status = 'active';
                 if($this->isFirstRegisterUser()){
-                    $routes = json_decode(\Filebase\Filesystem::read('route.auth'),true);
+                    $routes = json_decode(\Filebase\Filesystem::read($this->getAuthRoutePath()),true);
                     $auth = [];
                     foreach($routes as $route){
                         $auth[] = [

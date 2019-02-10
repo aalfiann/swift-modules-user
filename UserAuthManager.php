@@ -12,8 +12,6 @@ use \aalfiann\Filebase;
 
 class UserAuthManager extends UserHelper {
 
-    protected $key = 'route.auth';
-
     /**
      * Append data route for authorization
      * 
@@ -22,19 +20,19 @@ class UserAuthManager extends UserHelper {
      * @return bool
      */
     public function appendAuthRoute($pattern){
-        if(!is_file($this->key)){
-            return \Filebase\Filesystem::write($this->key,json_encode([$pattern],JSON_UNESCAPED_SLASHES));
+        if(!is_file($this->getAuthRoutePath())){
+            return \Filebase\Filesystem::write($this->getAuthRoutePath(),json_encode([$pattern],JSON_UNESCAPED_SLASHES));
         }
-        $content = json_decode(\Filebase\Filesystem::read($this->key),true);
+        $content = json_decode(\Filebase\Filesystem::read($this->getAuthRoutePath()),true);
         if($content){
             if ((array_search($pattern, $content)) === false) {
                 array_push($content,$pattern);
-                return \Filebase\Filesystem::write($this->key,json_encode($content,JSON_UNESCAPED_SLASHES));
+                return \Filebase\Filesystem::write($this->getAuthRoutePath(),json_encode($content,JSON_UNESCAPED_SLASHES));
             } else {
                 return false;
             }
         }
-        return \Filebase\Filesystem::write($this->key,json_encode([$pattern],JSON_UNESCAPED_SLASHES));
+        return \Filebase\Filesystem::write($this->getAuthRoutePath(),json_encode([$pattern],JSON_UNESCAPED_SLASHES));
     }
 
     /**
@@ -45,14 +43,14 @@ class UserAuthManager extends UserHelper {
      * @return bool
      */
     public function deleteAuthRoute($pattern) {
-        $content = json_decode(\Filebase\Filesystem::read($this->key),true);
+        $content = json_decode(\Filebase\Filesystem::read($this->getAuthRoutePath()),true);
         if($content){
             $data = $content;
             if (($key = array_search($pattern, $data)) !== false) {
                 unset($data[$key]);
             }
             $content = $data;
-            return \Filebase\Filesystem::write($this->key,json_encode($content,JSON_UNESCAPED_SLASHES));
+            return \Filebase\Filesystem::write($this->getAuthRoutePath(),json_encode($content,JSON_UNESCAPED_SLASHES));
         }
         return false;
     }
@@ -124,7 +122,10 @@ class UserAuthManager extends UserHelper {
      * @return array
      */
     public function optionAuthRoutes(){
-        $result = json_decode(\Filebase\Filesystem::read($this->key),true);
+        if(!is_file($this->getAuthRoutePath())){
+            \Filebase\Filesystem::write($this->getAuthRoutePath(),json_encode([],JSON_UNESCAPED_SLASHES));
+        }
+        $result = json_decode(\Filebase\Filesystem::read($this->getAuthRoutePath()),true);
         if($result){
             return [
                 'result' => $result,
